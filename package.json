@@ -1,0 +1,11 @@
+{
+	"dependencies": {
+		"@laufire/utils": "^3.0.0-0",
+		"axios": "^1.4.0",
+		"dayjs": "^1.11.9",
+		"geo-tz": "^7.0.7",
+		"moment": "^2.29.4",
+		"react": "^18.2.0",
+		"suncalc": "^1.9.0"
+	}
+}
