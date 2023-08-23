@@ -23,21 +23,22 @@ const locations =[
     }
 ]
 const dates =[
-  "2/28/2023, 12:30:00",
+  "2/28/2023, 12:00:00",
   "5/01/2023, 12:00:00",
-  "8/31/2023, 12:30:00",
-  "11/15/2023, 12:30:00",
+  "8/31/2023, 12:00:00",
+  "11/15/2023, 12:00:00",
  
-].map((date)=> new Date(date));
+];
 
 
 
 const dateTimeFormatter=(timeList)=>(
-  map(timeList,(times)=>times.toLocaleString()));
+  map(timeList,(times)=>new Date(times).toLocaleString()));
 
 const getCalculatedSunTimes=(data) => {
   const {latitude,longitude,date } = data;
-  const sunTimes = SunCalc.getTimes(date, latitude, longitude, 0);
+  const UTCDate = dayjs(date,find(latitude,longitude));
+  const sunTimes = SunCalc.getTimes(UTCDate, latitude, longitude, 0);
   const timeList = select(sunTimes,["sunrise","sunset"]);
  
   return ({
@@ -47,23 +48,27 @@ const getCalculatedSunTimes=(data) => {
   });
 };
 
-const getTableData = ({place,sunrise,sunset,id,data})=>
+const getTableData = ({place,date,sunrise,sunset,id,data})=>
 {
-  const sunriseTestData = new Date((data[id]).sunrise);
-  const sunsetTestData = new Date((data[id]).sunset);
-  const differenceInSunrise = `${dayjs(sunrise).diff(dayjs(sunriseTestData),'minutes')} minutes`;
-  const differenceInSunset =`${dayjs(sunset).diff(dayjs(sunsetTestData),'minutes')} minutes`;
-
+  const latitude = data[id].latitude;
+  const longitude =  data[id].longitude;
+  const sunriseTestData = dayjs((data[id]).sunrise,find(latitude,longitude));
+  const sunsetTestData = dayjs((data[id]).sunset,find(latitude,longitude));
+  const differenceInSunrise = `${sunrise.diff(sunriseTestData,'minutes')} minutes`;
+  const differenceInSunset =`${sunset.diff(sunsetTestData,'minutes')} minutes`;
   return ({
   place,
   ...dateTimeFormatter(
-    {sunrise,
-    sunriseTestData,
-    sunset,
-    sunsetTestData,}
+    {
+      date,
+      sunrise,
+      sunriseTestData,
+      sunset,
+      sunsetTestData
+    }
     ),
   differenceInSunrise,
-  differenceInSunset,
+  differenceInSunset,   
   });
 };
 
@@ -84,6 +89,6 @@ console.log("FirstComparisonResultTable");
 tableDisplay(firstComparisonTable);
 console.log("SecondComparisonResultTable");
 tableDisplay(secondComparisonTable);
-// console.table(extendedArray);
+// console.log(correctedArray);
 }
 main();

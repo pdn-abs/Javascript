@@ -3,8 +3,8 @@ module.exports =[
     place: 'London',
     latitude: 51.502541599117016,
     longitude: -0.14834431689179772,
-    sunrise: '2/28/2023, 11:18:00 am',
-    sunset: '3/01/2023, 12:08:00 am'
+    sunrise: '2/28/2023, 12:18:00 pm',
+    sunset: '2/28/2023, 11:08:00 pm'
   },
   {
     place: 'London',
@@ -24,8 +24,8 @@ module.exports =[
     place: 'London',
     latitude: 51.502541599117016,
     longitude: -0.14834431689179772,
-    sunrise: '11/15/2023, 11:47:24 am',
-    sunset: '11/15/2023, 8:41:00 pm'
+    sunrise: '11/15/2023, 12:47:00 pm',
+    sunset: '11/15/2023, 9:41:00 pm'
   },
   {
     place: 'Chennai',
