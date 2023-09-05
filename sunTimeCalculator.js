@@ -21,11 +21,6 @@ const locations =[
       latitude: 13.069484391471253,
       longitude: 80.31012742581258
     },
-    {
-      place:'Honolulu',
-      latitude: 21.3099,
-      longitude: 157.8581,
-    }
 ]
 const dates =[
   "2/28/2023, 12:00:00",
@@ -45,8 +40,7 @@ const getCalculatedSunTimes=(data) => {
   const UTCDate = dayjs(date,findTimezone(latitude,longitude));
   const sunTimes = SunCalc.getTimes(UTCDate, latitude, longitude, 0);
   const timeList = select(sunTimes,["sunrise","sunset"]);
-  console.log(data);
- 
+
   return ({
     ...data,
    sunrise:dayjs(timeList.sunrise,findTimezone(latitude,longitude)),
