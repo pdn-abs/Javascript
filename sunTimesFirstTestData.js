@@ -54,6 +54,34 @@ module.exports =[
     longitude: 80.31012742581258,
     sunrise: '11/15/2023, 6:06:00 am',
     sunset: '11/15/2023, 5:40:37 pm'
+  },
+  {
+    place:'Honolulu',
+    latitude: 21.3099,
+    longitude: 157.8581,
+    sunrise: '8/31/2023, 9:14:00 am',
+    sunset: '8/31/2023, 6:22:00 pm'
+  },
+  {
+    place:'Honolulu',
+    latitude: 21.3099,
+    longitude: 157.8581,
+    sunrise: '8/31/2023, 9:44:00 pm',
+    sunset: '8/31/2023, 6:22:00 pm'
+  },
+  {
+    place:'Honolulu',
+    latitude: 21.3099,
+    longitude: 157.8581,
+    sunrise: '8/31/2023, 12:44:00 am',
+    sunset: '8/31/2023, 1:18:00 pm'
+  },
+  {
+    place:'Honolulu',
+    latitude: 21.3099,
+    longitude: 157.8581,
+    sunrise: '8/31/2023, 5:56:00 am',
+    sunset: '8/31/2023, 6:22:00 pm'
   }
 
  ]

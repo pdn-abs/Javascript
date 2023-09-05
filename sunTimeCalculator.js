@@ -3,7 +3,7 @@ const { peek } = require("@laufire/utils/debug");
 const {possibilities} = require("@laufire/utils/prob");
 const dayjs = require("dayjs");
 var timezone = require('dayjs/plugin/timezone')
-const { find } = require('geo-tz')
+const { find: findTimezone } = require('geo-tz')
 const SunCalc =require("suncalc");
 const firstTestData = require("./sunTimesFirstTestData");
 const secondTestData = require("./sunTimesSecondTestData");
@@ -20,6 +20,11 @@ const locations =[
       place: 'Chennai',
       latitude: 13.069484391471253,
       longitude: 80.31012742581258
+    },
+    {
+      place:'Honolulu',
+      latitude: 21.3099,
+      longitude: 157.8581,
     }
 ]
 const dates =[
@@ -37,14 +42,15 @@ const dateTimeFormatter=(timeList)=>(
 
 const getCalculatedSunTimes=(data) => {
   const {latitude,longitude,date } = data;
-  const UTCDate = dayjs(date,find(latitude,longitude));
+  const UTCDate = dayjs(date,findTimezone(latitude,longitude));
   const sunTimes = SunCalc.getTimes(UTCDate, latitude, longitude, 0);
   const timeList = select(sunTimes,["sunrise","sunset"]);
+  console.log(data);
  
   return ({
     ...data,
-   sunrise:dayjs(timeList.sunrise,find(latitude,longitude)),
-   sunset:dayjs(timeList.sunset,find(latitude,longitude))
+   sunrise:dayjs(timeList.sunrise,findTimezone(latitude,longitude)),
+   sunset:dayjs(timeList.sunset,findTimezone(latitude,longitude))
   });
 };
 
@@ -52,15 +58,15 @@ const getTableData = ({place,date,sunrise,sunset,id,data})=>
 {
   const latitude = data[id].latitude;
   const longitude =  data[id].longitude;
-  const sunriseTestData = dayjs((data[id]).sunrise,find(latitude,longitude));
-  const sunsetTestData = dayjs((data[id]).sunset,find(latitude,longitude));
-  const differenceInSunrise = `${sunrise.diff(sunriseTestData,'minutes')} minutes`;
-  const differenceInSunset =`${sunset.diff(sunsetTestData,'minutes')} minutes`;
+  const sunriseTestData = dayjs((data[id]).sunrise,findTimezone(latitude,longitude));
+  const sunsetTestData = dayjs((data[id]).sunset,findTimezone(latitude,longitude));
+  const differenceInSunrise = `${sunrise.diff(sunriseTestData,'seconds')} seconds`;
+  const differenceInSunset =`${sunset.diff(sunsetTestData,'seconds')} seconds`;
   return ({
   place,
   ...dateTimeFormatter(
     {
-      date,
+      // date,
       sunrise,
       sunriseTestData,
       sunset,
