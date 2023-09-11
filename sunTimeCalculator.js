@@ -1,41 +1,12 @@
-const { select, map, pick } = require("@laufire/utils/collection");
-const { peek } = require("@laufire/utils/debug");
-const {possibilities} = require("@laufire/utils/prob");
+const { select } = require("@laufire/utils/collection");
 const dayjs = require("dayjs");
 var timezone = require('dayjs/plugin/timezone')
 const { find: findTimezone } = require('geo-tz')
 const SunCalc =require("suncalc");
-const firstTestData = require("./sunTimesFirstTestData");
-const secondTestData = require("./sunTimesSecondTestData");
 
 dayjs.extend(timezone);
 
-const locations =[
-		{
-      place: 'London',
-      latitude: 51.502541599117016,
-      longitude: -0.14834431689179772 
-    },
-    {
-      place: 'Chennai',
-      latitude: 13.069484391471253,
-      longitude: 80.31012742581258
-    },
-]
-const dates =[
-  "2/28/2023, 12:00:00",
-  "5/01/2023, 12:00:00",
-  "8/31/2023, 12:00:00",
-  "11/15/2023, 12:00:00",
- 
-];
-
-
-
-const dateTimeFormatter=(timeList)=>(
-  map(timeList,(times)=>new Date(times).toLocaleString()));
-
-const getCalculatedSunTimes=(data) => {
+const getCalculatedSunTimes = (data) => {
   const {latitude,longitude,date } = data;
   const UTCDate = dayjs(date,findTimezone(latitude,longitude));
   const sunTimes = SunCalc.getTimes(UTCDate, latitude, longitude, 0);
@@ -48,47 +19,21 @@ const getCalculatedSunTimes=(data) => {
   });
 };
 
-const getTableData = ({place,date,sunrise,sunset,id,data})=>
-{
-  const latitude = data[id].latitude;
-  const longitude =  data[id].longitude;
-  const sunriseTestData = dayjs((data[id]).sunrise,findTimezone(latitude,longitude));
-  const sunsetTestData = dayjs((data[id]).sunset,findTimezone(latitude,longitude));
-  const differenceInSunrise = `${sunrise.diff(sunriseTestData,'seconds')} seconds`;
-  const differenceInSunset =`${sunset.diff(sunsetTestData,'seconds')} seconds`;
-  return ({
-  place,
-  ...dateTimeFormatter(
-    {
-      // date,
-      sunrise,
-      sunriseTestData,
-      sunset,
-      sunsetTestData
-    }
-    ),
-  differenceInSunrise,
-  differenceInSunset,   
-  });
-};
 
-const tableDisplay = (calculatedData) => {
-  console.table(calculatedData);
+const getDayOfTheWeek = (date,latitude,longitude) => {
+const sunTimeData = getCalculatedSunTimes({date,latitude,longitude});
+const dateTime = dayjs(sunTimeData.date);
+const timezone = findTimezone(latitude,longitude);
+const sunrise = sunTimeData.sunrise;
+
+return dateTime.isAfter(sunrise) 
+? dateTime.format("dddd")
+: dateTime.add(1,'day').format("dddd");
+
 }
-const main=()=> {
-const comboArray = possibilities({locations,dates});
-const correctedArray = comboArray.map((ele)=>(
-  {
-    ...ele.locations,
-    date:ele.dates,
-  }))
-const extendedArray = correctedArray.map(getCalculatedSunTimes); 
-const firstComparisonTable = extendedArray.map((details,id)=>getTableData({...details,id,data:firstTestData}));
-const secondComparisonTable = extendedArray.map((details,id)=>getTableData({...details,id,data:secondTestData}))
-console.log("FirstComparisonResultTable");
-tableDisplay(firstComparisonTable);
-console.log("SecondComparisonResultTable");
-tableDisplay(secondComparisonTable);
-// console.log(correctedArray);
+
+const main = () =>{
+  console.log(getDayOfTheWeek(dayjs(), 13.069484391471253,80.31012742581258));
 }
 main();
+
